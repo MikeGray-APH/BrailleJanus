@@ -1,0 +1,178 @@
+/* Copyright (C) 2017 American Printing House for the Blind Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+plugins {
+	id 'java'
+	id 'application'
+	id 'edu.sc.seis.launch4j' version '2.4.2'
+}
+
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
+group = 'org.aph.braillejanus'
+version = '0.1.0'
+mainClassName = 'org.aph.braillejanus.Main'
+
+String swtJar
+switch(System.getProperty('os.name').toLowerCase().split()[0])
+{
+case 'mac':
+	swtJar = 'org.eclipse.swt.cocoa.macosx.x86_64'
+	applicationDefaultJvmArgs.add('-XstartOnFirstThread')
+	break
+
+case 'windows':
+	swtJar = 'org.eclipse.swt.win32.win32.x86_64'
+	break
+
+case 'linux':
+default:
+	swtJar = 'org.eclipse.swt.gtk.linux.x86_64'
+	break
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+	compile group: 'org.liblouisaph', name: 'LibLouisAPH-linux64', version: '0.+'
+	compile group: 'org.eclipse.swt', name: swtJar, version: '4.+'
+	archives group: 'org.liblouisaph', name: 'LibLouisAPH-linux64', version: '0.+'
+	archives group: 'org.liblouisaph', name: 'LibLouisAPH-win64', version: '0.+'
+	archives group: 'org.liblouisaph', name: 'LibLouisAPH-mac64', version: '0.+'
+	archives group: 'org.eclipse.swt', name: 'org.eclipse.swt.gtk.linux.x86_64', version: '4.+'
+	archives group: 'org.eclipse.swt', name: 'org.eclipse.swt.gtk.linux.x86', version: '4.+'
+	archives group: 'org.eclipse.swt', name: 'org.eclipse.swt.win32.win32.x86_64', version: '4.+'
+	archives group: 'org.eclipse.swt', name: 'org.eclipse.swt.win32.win32.x86', version: '4.+'
+	archives group: 'org.eclipse.swt', name: 'org.eclipse.swt.cocoa.macosx.x86_64', version: '4.+'
+}
+
+ext.defaultManifest = manifest {
+	attributes('Main-Class': mainClassName,
+	           'Implementation-Version': version)
+}
+
+jar {
+	manifest = project.manifest {
+		from defaultManifest
+	}
+
+	baseName = 'BrailleJanus'
+}
+
+task linux32Jar(type: Jar) {
+	appendix = 'linux-x86'
+
+	manifest = project.manifest {
+		from defaultManifest
+	}
+
+	from {
+		zipTree configurations.archives.find { it.getName().contains('linux.x86-') }
+	}
+
+	with jar
+}
+
+task linux64Jar(type: Jar) {
+	appendix = 'linux-x86_64'
+
+	manifest = project.manifest {
+		from defaultManifest
+	}
+
+	from {
+		zipTree configurations.archives.find { it.getName().contains('linux.x86_64') }
+	}
+
+	from {
+		zipTree configurations.archives.find { it.getName().contains('LibLouisAPH-linux64') }
+	}
+
+	with jar
+}
+
+task win32Jar(type: Jar) {
+	appendix = 'windows-x86'
+
+	manifest = project.manifest {
+		from defaultManifest
+	}
+
+	from {
+		zipTree configurations.archives.find { it.getName().contains('win32.x86-') }
+	}
+
+	with jar
+}
+
+task win64Jar(type: Jar) {
+	appendix = 'windows-x86_64'
+
+	manifest = project.manifest {
+		from defaultManifest
+	}
+
+	from {
+		zipTree configurations.archives.find { it.getName().contains('win32.x86_64') }
+	}
+
+	from {
+		zipTree configurations.archives.find { it.getName().contains('LibLouisAPH-win64') }
+	}
+
+	with jar
+}
+
+task macxJar(type: Jar) {
+	appendix = 'macosx-x86_64'
+
+	manifest = project.manifest {
+		from defaultManifest
+	}
+
+	from {
+		zipTree configurations.archives.find { it.getName().contains('macosx.x86_64') }
+	}
+
+	from {
+		zipTree configurations.archives.find { it.getName().contains('LibLouisAPH-mac64') }
+	}
+
+	with jar
+}
+
+task allJars {
+	dependsOn linux32Jar
+	dependsOn linux64Jar
+	dependsOn win32Jar
+	dependsOn win64Jar
+	dependsOn macxJar
+}
+
+run {
+	systemProperties['braillejanus.version'] = version
+}
+
+launch4j {
+	mainClassName = project.mainClassName
+	icon = '../../BrailleJanus.ico'
+	copyConfigurable = project.tasks.win64Jar.outputs.files
+	jar = "lib/${project.tasks.win64Jar.archiveName}"
+	outfile = project.name + '-' + project.version + '.exe'
+}
