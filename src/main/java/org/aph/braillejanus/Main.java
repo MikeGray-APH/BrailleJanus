@@ -85,7 +85,8 @@ public final class Main
 
 		try
 		{
-			LibLouisAPH.loadLibrary();
+			LibLouisAPH.loadLibraryInternal();
+			LibLouisAPH.setInternalTablePath();
 		}
 		catch(IOException exception)
 		{
