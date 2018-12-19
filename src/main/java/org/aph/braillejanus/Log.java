@@ -15,6 +15,10 @@
 
 package org.aph.braillejanus;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -31,14 +35,21 @@ public final class Log
 	private static final StringWriter logString = new StringWriter();
 	private static final PrintWriter logWriter = new PrintWriter(logString);
 
+	private static Shell shell;
+
 	private Log(){}
+
+	static void setShell(Shell shell)
+	{
+		Log.shell = shell;
+	}
 
 	static String getString()
 	{
 		return logString.toString();
 	}
 
-	static void message(int level, String message)
+	static void message(int level, String message, boolean showDialog)
 	{
 		String string;
 
@@ -60,15 +71,22 @@ public final class Log
 		System.err.flush();
 		logWriter.println(string);
 		logWriter.flush();
+
+		if(showDialog && shell != null)
+		{
+			MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+			messageBox.setMessage(string);
+			messageBox.open();
+		}
 	}
 
-	static void message(int level, Exception exception)
+	static void message(int level, Exception exception, boolean showDialog)
 	{
-		message(level, exception.getMessage());
+		message(level, exception.getMessage(), showDialog);
 	}
 
-	static void message(int level, Error error)
+	static void message(int level, Error error, boolean showDialog)
 	{
-		message(level, error.getMessage());
+		message(level, error.getMessage(), showDialog);
 	}
 }

@@ -81,6 +81,8 @@ public final class Main
 		shell.setText("BrailleJanus");
 		shell.addShellListener(new ShellHandler());
 
+		Log.setShell(shell);
+
 		new TextEditors(shell);
 
 		try
@@ -90,7 +92,7 @@ public final class Main
 		}
 		catch(IOException exception)
 		{
-			Log.message(Log.LOG_ERROR, exception);
+			Log.message(Log.LOG_ERROR, exception, true);
 			return;
 		}
 
@@ -147,7 +149,7 @@ public final class Main
 		InputStream fontInputStream = getClass().getResourceAsStream("/fonts/" + fontFileName);
 		if(fontInputStream == null)
 		{
-			Log.message(Log.LOG_WARNING, "Unable to open font resource:  " + fontFileName);
+			Log.message(Log.LOG_WARNING, "Unable to open font resource:  " + fontFileName, false);
 			return;
 		}
 
@@ -166,11 +168,11 @@ public final class Main
 		}
 		catch(FileNotFoundException exception)
 		{
-			Log.message(Log.LOG_ERROR, exception);
+			Log.message(Log.LOG_ERROR, exception, false);
 		}
 		catch(IOException exception)
 		{
-			Log.message(Log.LOG_ERROR, exception);
+			Log.message(Log.LOG_ERROR, exception, false);
 		}
 		finally
 		{
@@ -182,7 +184,7 @@ public final class Main
 			}
 			catch(IOException exception)
 			{
-				Log.message(Log.LOG_ERROR, exception);
+				Log.message(Log.LOG_ERROR, exception, false);
 			}
 		}
 	}

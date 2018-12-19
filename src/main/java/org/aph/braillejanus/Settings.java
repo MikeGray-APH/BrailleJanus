@@ -43,7 +43,7 @@ public class Settings
 			version = System.getProperty("braillejanus.version");
 			if(version == null)
 			{
-				Log.message(Log.LOG_WARNING, "unable to determine version");
+				Log.message(Log.LOG_WARNING, "unable to determine version", false);
 				version = "development";
 			}
 		}
@@ -79,7 +79,7 @@ public class Settings
 
 			if(version != null)
 				if(!version.equals(value))
-					Log.message(Log.LOG_WARNING, "Version " + value + " from settings file does not match " + version);
+					Log.message(Log.LOG_WARNING, "Version " + value + " from settings file does not match " + version, false);
 			break;
 
 		default:  return false;
@@ -92,7 +92,7 @@ public class Settings
 	{
 		if(!file.exists())
 		{
-			Log.message(Log.LOG_WARNING, "Settings file not found:  " + file.getPath());
+			Log.message(Log.LOG_WARNING, "Settings file not found:  " + file.getPath(), false);
 			return false;
 		}
 
@@ -107,11 +107,11 @@ public class Settings
 				try
 				{
 					if(!readLine(line))
-						Log.message(Log.LOG_ERROR, "Unknown setting, line #" + lineNumber + ":  " + line + " -- " + file.getPath());
+						Log.message(Log.LOG_ERROR, "Unknown setting, line #" + lineNumber + ":  " + line + " -- " + file.getPath(), false);
 				}
 				catch(NumberFormatException ignored)
 				{
-					Log.message(Log.LOG_ERROR, "Bad setting value, line #" + lineNumber + ":  " + line + " -- " + file.getPath());
+					Log.message(Log.LOG_ERROR, "Bad setting value, line #" + lineNumber + ":  " + line + " -- " + file.getPath(), false);
 				}
 				finally
 				{
@@ -121,11 +121,11 @@ public class Settings
 		}
 		catch(FileNotFoundException exception)
 		{
-			Log.message(Log.LOG_ERROR, exception);
+			Log.message(Log.LOG_ERROR, exception, false);
 		}
 		catch(IOException exception)
 		{
-			Log.message(Log.LOG_ERROR, exception);
+			Log.message(Log.LOG_ERROR, exception, false);
 		}
 		finally
 		{
@@ -136,7 +136,7 @@ public class Settings
 			}
 			catch(IOException exception)
 			{
-				Log.message(Log.LOG_ERROR, exception);
+				Log.message(Log.LOG_ERROR, exception, false);
 			}
 		}
 
@@ -161,7 +161,7 @@ public class Settings
 		}
 		catch(FileNotFoundException exception)
 		{
-			Log.message(Log.LOG_ERROR, exception);
+			Log.message(Log.LOG_ERROR, exception, false);
 			return false;
 		}
 		finally
