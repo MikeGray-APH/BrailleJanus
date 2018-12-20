@@ -83,6 +83,12 @@ public class TextEditors
 				dotChar |= 0x04;
 				break;
 
+			case 'a':
+
+				dotState |= 0x40;
+				dotChar |= 0x40;
+				break;
+
 			case 'j':
 
 				dotState |= 0x08;
@@ -99,6 +105,12 @@ public class TextEditors
 
 				dotState |= 0x20;
 				dotChar |= 0x20;
+				break;
+
+			case ';':
+
+				dotState |= 0x80;
+				dotChar |= 0x80;
 				break;
 			}
 		}
@@ -125,6 +137,11 @@ public class TextEditors
 				dotState &= ~0x04;
 				break;
 
+			case 'a':
+
+				dotState &= ~0x40;
+				break;
+
 			case 'j':
 
 				dotState &= ~0x08;
@@ -138,6 +155,11 @@ public class TextEditors
 			case 'l':
 
 				dotState &= ~0x20;
+				break;
+
+			case ';':
+
+				dotState &= ~0x80;
 				break;
 			}
 
