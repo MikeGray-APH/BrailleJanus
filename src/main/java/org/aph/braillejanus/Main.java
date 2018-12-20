@@ -15,6 +15,7 @@
 
 package org.aph.braillejanus;
 
+import org.aph.braillejanus.actions.Actions;
 import org.aph.liblouisaph.LibLouisAPH;
 
 import org.eclipse.swt.SWT;
@@ -43,6 +44,7 @@ public final class Main
 	private final Display display;
 	private final Shell shell;
 	private final Settings settings;
+	private final TextEditors textEditors;
 
 	public static void main(String args[])
 	{
@@ -83,7 +85,7 @@ public final class Main
 
 		Log.setShell(shell);
 
-		new TextEditors(shell);
+		textEditors = new TextEditors(shell);
 
 		try
 		{
@@ -96,6 +98,9 @@ public final class Main
 			return;
 		}
 
+		new Actions(shell, settings, textEditors);
+
+		//   need to set size after everything is added
 		shell.setSize(640, 480);
 		shell.open();
 		while(!shell.isDisposed())

@@ -26,7 +26,7 @@ import java.io.PrintWriter;
 
 public class Settings
 {
-	static final String OS_NAME = System.getProperty("os.name").toLowerCase();
+	static public final String OS_NAME = System.getProperty("os.name").toLowerCase();
 
 	private final Display display;
 	private final File file;
@@ -57,6 +57,11 @@ public class Settings
 				fileName += ".braillejanus.conf";
 		}
 		file = new File(fileName);
+	}
+
+	public String getVersion()
+	{
+		return version;
 	}
 
 	private boolean readLine(String line)
