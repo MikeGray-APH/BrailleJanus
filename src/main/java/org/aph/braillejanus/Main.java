@@ -30,9 +30,10 @@ import org.eclipse.swt.widgets.Shell;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 /**
  * <p>
@@ -158,18 +159,12 @@ public final class Main
 			return;
 		}
 
-		FileOutputStream fontOutputStream = null;
 		try
 		{
 			File fontFile = new File(System.getProperty("java.io.tmpdir") + File.separator + fontFileName);
-			fontOutputStream = new FileOutputStream(fontFile);
-
-			byte buffer[] = new byte[0x1000];
-			int length;
-			while((length = fontInputStream.read(buffer)) > 0)
-				fontOutputStream.write(buffer, 0, length);
-
+			Files.copy(fontInputStream, fontFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			display.loadFont(fontFile.getPath());
+			fontFile.deleteOnExit();
 		}
 		catch(FileNotFoundException exception)
 		{
@@ -184,8 +179,6 @@ public final class Main
 			try
 			{
 				fontInputStream.close();
-				if(fontOutputStream != null)
-					fontOutputStream.close();
 			}
 			catch(IOException exception)
 			{
