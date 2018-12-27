@@ -87,6 +87,10 @@ task linux32Jar(type: Jar) {
 		zipTree configurations.archives.find { it.getName().contains('linux.x86-') }
 	}
 
+	from {
+		zipTree configurations.archives.find { it.getName().contains('LibLouisAPH-linux32') }
+	}
+
 	with jar
 }
 
@@ -117,6 +121,10 @@ task win32Jar(type: Jar) {
 
 	from {
 		zipTree configurations.archives.find { it.getName().contains('win32.x86-') }
+	}
+
+	from {
+		zipTree configurations.archives.find { it.getName().contains('LibLouisAPH-win32') }
 	}
 
 	with jar
